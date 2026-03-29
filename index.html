@@ -4,165 +4,136 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MarketPulse India | Trader Intelligence Dashboard</title>
+    <meta
+      name="description"
+      content="India-first market intelligence dashboard with live RSS analysis, interactive panels, multilingual AI chat, and market snapshots."
+    />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css" />
+
+    <link rel="stylesheet" href="./styles/base.css" />
+    <link rel="stylesheet" href="./styles/layout.css" />
+    <link rel="stylesheet" href="./styles/panels.css" />
+    <link rel="stylesheet" href="./styles/widgets.css" />
+    <link rel="stylesheet" href="./styles/ai.css" />
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
   </head>
   <body>
-    <div class="bg-glow bg-glow-a"></div>
-    <div class="bg-glow bg-glow-b"></div>
-
-    <header class="topbar">
-      <div class="brand">
-        <p class="eyebrow">India Retail Trading Intelligence</p>
-        <h1>MarketPulse India</h1>
-        <p class="subtitle">
-          Live market monitor with RSS intelligence, YouTube live streams, AI analysis,
-          translation, and voice explainability.
-        </p>
-      </div>
-      <div class="top-actions">
-        <button id="addPanelBtn" class="btn btn-primary">+ Add Panel</button>
-        <button id="refreshBtn" class="btn btn-ghost">Refresh Now</button>
-        <label class="select-wrap">
-          <span>Auto Refresh</span>
-          <select id="autoRefreshSelect">
-            <option value="1">1 min</option>
-            <option value="3">3 min</option>
-            <option value="5" selected>5 min</option>
-            <option value="10">10 min</option>
-            <option value="15">15 min</option>
-          </select>
-        </label>
-        <button id="settingsBtn" class="btn btn-ghost">API Settings</button>
-      </div>
-    </header>
-
-    <section class="status-strip">
-      <div class="status-pill">
-        <span class="label">IST Clock</span>
-        <strong id="istClock">--:--:--</strong>
-      </div>
-      <div class="status-pill">
-        <span class="label">Market Session</span>
-        <strong id="marketStatus">Checking...</strong>
-      </div>
-      <div class="status-pill">
-        <span class="label">Compliance Layer</span>
-        <strong id="complianceBadge">Enabled</strong>
-      </div>
-      <div class="status-pill">
-        <span class="label">Last Update</span>
-        <strong id="lastUpdated">Not yet</strong>
-      </div>
-    </section>
-
-    <section class="tv-strip panel">
-      <h2>Live Market Tape</h2>
-      <div id="tvTickerTape" class="tv-widget-host"></div>
-    </section>
-
-    <main class="dashboard-grid">
-      <div id="dynamicPanelsContainer" class="dashboard-grid" style="grid-column: span 12; display: contents;">
-        <!-- Dynamic panels (RSS feeds, streams) will be injected here -->
-      </div>
-
-      <section class="panel">
-        <div class="panel-head">
-          <h2>Sentiment Pulse</h2>
-          <p class="muted">Headlines scored into positive, neutral, and risk-heavy buckets.</p>
-        </div>
-        <div class="metrics-grid">
-          <div class="metric-card">
-            <span>Sentiment Index</span>
-            <strong id="sentimentScore">0</strong>
-          </div>
-          <div class="metric-card">
-            <span>Positive</span>
-            <strong id="positiveCount">0</strong>
-          </div>
-          <div class="metric-card">
-            <span>Neutral</span>
-            <strong id="neutralCount">0</strong>
-          </div>
-          <div class="metric-card">
-            <span>Negative</span>
-            <strong id="negativeCount">0</strong>
-          </div>
-        </div>
-        <div class="panel-subsection">
-          <h3>Keyword Heat</h3>
-          <div id="keywordCloud" class="keyword-cloud"></div>
-        </div>
-        <div class="panel-subsection">
-          <h3>Risk Radar</h3>
-          <div id="riskRadar" class="risk-radar"></div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <h2>Market Widgets</h2>
-          <p class="muted">Fast visual context for indices, sectors, and key symbols.</p>
-        </div>
-        <div class="tv-stack">
-          <div id="tvOverview" class="tv-widget-host compact"></div>
-          <div id="tvHeatmap" class="tv-widget-host compact"></div>
-        </div>
-      </section>
-
-      <section class="panel large-panel">
-        <div class="panel-head">
-          <h2>AI Market Analyst</h2>
-          <p class="muted">
-            Ask questions on the latest feed context. Guardrails block direct buy/sell trade calls.
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <p class="eyebrow">India Retail Trading Intelligence</p>
+          <h1>MarketPulse India</h1>
+          <p class="subtitle">
+            Realtime feeds, 30+ data panel types, and multilingual AI explainers for Indian traders.
           </p>
         </div>
+        <div class="top-actions">
+          <button id="openAiDrawerBtn" class="btn btn-ai">Ask AI</button>
+          <button id="addPanelBtn" class="btn btn-primary">+ Add Panel</button>
+          <button id="refreshBtn" class="btn btn-ghost">Refresh</button>
+          <label class="select-wrap">
+            <span>Auto Refresh</span>
+            <select id="autoRefreshSelect">
+              <option value="1">1 min</option>
+              <option value="3">3 min</option>
+              <option value="5" selected>5 min</option>
+              <option value="10">10 min</option>
+              <option value="15">15 min</option>
+            </select>
+          </label>
+          <button id="settingsBtn" class="btn btn-ghost">API Settings</button>
+        </div>
+      </header>
 
-        <div class="ai-layout">
-          <div class="ai-controls">
-            <textarea
-              id="questionInput"
-              rows="5"
-              placeholder="Ask: What is driving today’s banking sentiment in India?"
-            ></textarea>
-            <div class="ai-buttons">
-              <button id="askAiBtn" class="btn btn-primary">Ask AI</button>
-              <button id="translateBtn" class="btn btn-ghost">Translate</button>
-              <button id="voiceBtn" class="btn btn-ghost">Voice Output</button>
-            </div>
-            <label class="select-wrap">
-              <span>Default Output Language</span>
-              <select id="defaultLanguageSelect"></select>
-            </label>
-            <p class="tiny-note">
-              Legal-safe mode: analysis, explanations, sentiment, and possibilities only. No direct
-              trading instruction.
-            </p>
-          </div>
-          <div class="ai-output-wrap">
-            <h3>AI Response</h3>
-            <div id="aiOutput" class="ai-output">Your AI summary will appear here.</div>
-          </div>
+      <section id="localRunBanner" class="local-run-banner hidden">
+        Opened as a local file. Live data requires HTTP mode. Run <code>start-local.bat</code> and open
+        <code>http://127.0.0.1:5500/</code>.
+      </section>
+
+      <section class="status-strip">
+        <div class="status-pill">
+          <span class="label">IST Clock</span>
+          <strong id="istClock">--:--:--</strong>
+        </div>
+        <div class="status-pill">
+          <span class="label">Market Session</span>
+          <strong id="marketStatus">Checking...</strong>
+        </div>
+        <div class="status-pill">
+          <span class="label">Feed Health</span>
+          <strong id="feedHealthBadge">Checking...</strong>
+        </div>
+        <div class="status-pill">
+          <span class="label">Last Update</span>
+          <strong id="lastUpdated">Not yet</strong>
         </div>
       </section>
 
+      <section class="tv-strip panel">
+        <h2>Live Market Tape</h2>
+        <div id="tvTickerTape" class="tv-widget-host"></div>
+      </section>
 
-    </main>
+      <section class="tv-strip panel" style="margin-top:0.25rem; border-top: none;">
+        <h2>Top Market Movers & Crypto Tape</h2>
+        <div id="tvCryptoTape" class="tv-widget-host"></div>
+      </section>
 
-    <section class="legal-box">
-      <h2>Legal & Safety Layer</h2>
-      <p>
-        This dashboard is for education and market awareness. It does not provide investment advice.
-        AI output is filtered to avoid direct buy/sell/hold instructions, target prices, or trade
-        execution calls. Always do independent research and consult licensed professionals before
-        making financial decisions.
-      </p>
-    </section>
+      <main class="dashboard-grid">
+
+
+        <div
+          id="dynamicPanelsContainer"
+          class="dashboard-grid"
+          style="grid-column: span 12; display: contents"
+        ></div>
+      </main>
+
+      <section class="legal-box">
+        <h2>Legal and Safety Layer</h2>
+        <p>
+          This dashboard is for education and market awareness. AI responses avoid direct trade instructions,
+          target prices, and execution calls. Always do independent research and consult licensed professionals.
+        </p>
+      </section>
+    </div>
+
+    <aside id="aiDrawer" class="ai-drawer" aria-hidden="true">
+      <div class="ai-drawer-head">
+        <h3>AI Market Chat</h3>
+        <button id="closeAiDrawerBtn" class="btn btn-ghost btn-sm">Close</button>
+      </div>
+      <div class="ai-drawer-controls">
+        <label class="select-wrap">
+          <span>Response Language</span>
+          <select id="defaultLanguageSelect"></select>
+        </label>
+        <label class="select-wrap">
+          <span>Voice Language</span>
+          <select id="voiceLanguageSelect"></select>
+        </label>
+      </div>
+      <div id="aiChatThread" class="ai-chat-thread"></div>
+      <div class="ai-composer">
+        <textarea
+          id="chatQuestionInput"
+          rows="3"
+          placeholder="Ask: What is driving today's Nifty and banking sentiment?"
+        ></textarea>
+        <div class="ai-buttons">
+          <button id="askAiBtn" class="btn">Ask</button>
+          <button id="voiceBtn" class="btn">Voice</button>
+        </div>
+        <p id="aiStatusText" class="tiny-note">RSS context + compliance layer enabled.</p>
+      </div>
+    </aside>
+    <div id="aiOverlay" class="ai-overlay hidden"></div>
 
     <div id="settingsModal" class="modal hidden">
       <div class="modal-card">
@@ -170,75 +141,51 @@
           <h3>Integration Settings</h3>
           <button id="closeSettingsBtn" class="btn btn-ghost">Close</button>
         </div>
-
         <div class="modal-grid">
-          <label>
-            Sarvam API Key
-            <input id="sarvamApiKeyInput" type="password" placeholder="Enter API key" />
+          <label>Sarvam API Key <input id="sarvamApiKeyInput" type="password" placeholder="Enter API key" /></label>
+          <label>Chat Endpoint <input id="chatUrlInput" type="text" placeholder="https://api.sarvam.ai/v1/chat/completions" /></label>
+          <label>Chat Model <input id="chatModelInput" type="text" placeholder="sarvam-m" /></label>
+          <label>Translation Endpoint <input id="translateUrlInput" type="text" placeholder="https://api.sarvam.ai/translate" /></label>
+          <label>TTS Endpoint <input id="ttsUrlInput" type="text" placeholder="https://api.sarvam.ai/text-to-speech" /></label>
+          <label>TTS Model <input id="ttsModelInput" type="text" placeholder="bulbul:v2" /></label>
+          <label>Speaker <input id="speakerInput" type="text" placeholder="anushka" /></label>
+          <label>RSS Proxy URL (optional)
+            <input id="rssProxyUrlInput" type="text" placeholder="https://api.allorigins.win/raw?url={url}" />
           </label>
-          <label>
-            Chat Endpoint URL
-            <input id="chatUrlInput" type="text" placeholder="https://api.sarvam.ai/v1/chat/completions" />
-          </label>
-          <label>
-            Chat Model
-            <input id="chatModelInput" type="text" placeholder="sarvam-m" />
-          </label>
-          <label>
-            Translation Endpoint URL
-            <input id="translateUrlInput" type="text" placeholder="https://api.sarvam.ai/translate" />
-          </label>
-          <label>
-            TTS Endpoint URL
-            <input id="ttsUrlInput" type="text" placeholder="https://api.sarvam.ai/text-to-speech" />
-          </label>
-          <label>
-            TTS Model
-            <input id="ttsModelInput" type="text" placeholder="bulbul:v2" />
-          </label>
-          <label>
-            Speaker
-            <input id="speakerInput" type="text" placeholder="anushka" />
+          <label>Broker Snapshot URL (optional)
+            <input id="brokerApiUrlInput" type="text" placeholder="https://query1.finance.yahoo.com/v7/finance/quote?symbols={symbols}" />
           </label>
         </div>
-
-        <button id="saveSettingsBtn" class="btn btn-primary btn-full">Save Settings</button>
-      </div>
-    </div>
-
-    <div id="voiceModal" class="modal hidden">
-      <div class="modal-card small">
-        <div class="modal-head">
-          <h3>Voice Language</h3>
-          <button id="closeVoiceBtn" class="btn btn-ghost">Close</button>
-        </div>
-        <p class="muted">Select language for voice output.</p>
-        <label>
-          Language
-          <select id="voiceLanguageSelect"></select>
-        </label>
-        <button id="runVoiceBtn" class="btn btn-primary btn-full">Generate Voice</button>
+        <button id="saveSettingsBtn" class="btn btn-primary btn-full" style="margin-top: 0.8rem">Save Settings</button>
       </div>
     </div>
 
     <div id="addPanelModal" class="modal hidden">
       <div class="modal-card">
         <div class="modal-head">
-          <h3>Add New Panel</h3>
+          <h3>Add Panel</h3>
           <button id="closeAddPanelBtn" class="btn btn-ghost">Close</button>
         </div>
-        <div style="margin-top:1rem; display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom: 1rem;">
-          <button class="btn btn-primary filter-btn" data-filter="all">All</button>
-          <button class="btn btn-ghost filter-btn" data-filter="india">Indian</button>
-          <button class="btn btn-ghost filter-btn" data-filter="global">World</button>
-          <button class="btn btn-ghost filter-btn" data-filter="stream">Streams</button>
+        <div class="panel-modal-top">
+          <button class="btn btn-sm filter-btn active" data-filter="all">All</button>
+          <button class="btn btn-sm btn-ghost filter-btn" data-filter="india">India</button>
+          <button class="btn btn-sm btn-ghost filter-btn" data-filter="global">Global</button>
+          <button class="btn btn-sm btn-ghost filter-btn" data-filter="stream">Streams</button>
+          <button class="btn btn-sm btn-ghost filter-btn" data-filter="widget">Widgets</button>
+          <button class="btn btn-sm btn-ghost filter-btn" data-filter="market">Live Data</button>
+          <button class="btn btn-sm btn-ghost filter-btn" data-filter="insight">Insights</button>
+          <select id="panelCategorySelect" class="panel-category-select"></select>
+          <input id="panelSearchInput" type="text" class="panel-search-input" placeholder="Search feeds or panel names..." />
         </div>
-        <div class="panel-selection-grid" id="panelSelectionGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.8rem; max-height: 400px; overflow-y: auto;">
-          <!-- Dynamically populated from rss_urls.js -->
-        </div>
+        <div id="panelSelectionGrid" class="panel-selection-grid"></div>
       </div>
     </div>
 
-    <script src="./app.js" type="module"></script>
+    <script>
+      if (window.location.protocol === "file:") {
+        document.getElementById("localRunBanner")?.classList.remove("hidden");
+      }
+    </script>
+    <script src="./js/main.js" type="module"></script>
   </body>
 </html>

@@ -1,107 +1,58 @@
-﻿# MarketPulse India
+# MarketPulse India (GitHub Pages Ready)
 
-MarketPulse India is a white-theme, high-density web dashboard for Indian traders and stock market learners.
+MarketPulse India is a **frontend-only** market monitor focused on Indian traders.  
+It now includes:
 
-It includes:
-- RSS aggregation from Indian market, policy, and regulator sources
-- Auto-refreshing timeline with sentiment and keyword extraction
-- YouTube live stream wall for market channels
-- AI Q&A over latest feed context
-- Translation + voice output flow (Chat API -> Translate API -> TTS API)
-- Legal-safe guardrails that block direct buy/sell style instructions
+- 30+ versatile data panels (meters, maps, alerts, trending, boards, story cards, streams, widgets)
+- RSS + quote fallback logic that works without backend routes
+- Multilingual AI chat + voice flow (with optional Sarvam API key)
+- Drag/reorder/resize dashboard panels
 
 ## Stack
-- Frontend: HTML, CSS, JavaScript (runs without backend)
-- Optional backend: Python FastAPI proxy for secure API key usage
 
-## Project Structure
+- HTML + CSS + JS modules
+- TradingView embedded widgets
+- Public RSS/quote CORS-friendly fallback chain
+- Optional Sarvam endpoints for chat, translation, and TTS
 
-```text
-.
-|-- index.html
-|-- styles.css
-|-- app.js
-|-- backend/
-|   |-- app.py
-|   |-- requirements.txt
-|   |-- .env.example
-```
-
-## Quick Start (Frontend-Only)
-
-1. Serve the folder (recommended, avoid opening as file://):
+## Run Local
 
 ```bash
 python -m http.server 5500
 ```
 
-2. Open `http://localhost:5500`.
-3. Click **API Settings** and add your Sarvam API key and endpoints.
-4. Use **Refresh Now** to load feeds.
-5. Ask AI questions in the AI panel.
+Open `http://localhost:5500`.
 
-## Optional Backend Proxy (Recommended for Public Deployment)
-
-Use this so API keys are not exposed in browser code.
-
-1. Setup backend:
+Windows quick start:
 
 ```bash
-cd backend
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-copy .env.example .env
+start-local.bat
 ```
 
-2. Update `.env` with your real `SARVAM_API_KEY`.
-3. Run server:
+Important: do not open `index.html` directly with `file://` if you expect live RSS/quote data.
 
-```bash
-uvicorn app:app --reload --port 8000
-```
+## Deploy To GitHub Pages
 
-4. In frontend **API Settings**:
-- Set mode to `Backend Proxy`
-- Set backend URL to `http://127.0.0.1:8000`
+1. Push this repo to GitHub.
+2. In GitHub: `Settings -> Pages`.
+3. Source: `Deploy from a branch`.
+4. Branch: `main` (or your target branch), folder: `/ (root)`.
+5. Save and wait for Pages build.
 
-## AI Safety Layer
+No backend setup is required.
 
-The app applies two levels of safety:
-1. Prompt-level instructions to avoid direct trading directives.
-2. Output compliance filter that blocks phrases like direct buy/sell, target, stop-loss instructions.
+## API Settings (Optional)
 
-This project is for education and market awareness only.
+From `API Settings` inside the app you can set:
 
-## Data Sources (Default)
+- Sarvam API key
+- Chat endpoint/model
+- Translation endpoint
+- TTS endpoint/model + speaker
+- Optional custom RSS proxy URL (`{url}` placeholder supported)
+- Optional custom quote snapshot URL (`{symbols}` placeholder supported)
 
-The default feed list includes India-focused sources such as:
-- Economic Times Markets/Stocks/IPO feeds
-- Livemint Markets feed
-- Business Standard Markets and Companies feeds
-- SEBI RSS
-- RBI Press Releases and Notifications RSS
-- PIB economy feed
-- Google News India market query RSS
+## Safety
 
-You can add your own RSS URLs from the dashboard.
-
-## Notes
-
-- Some RSS providers can block direct browser requests. The app uses fallback methods (`allorigins` and `rss2json`) to improve reliability.
-- If Sarvam endpoint formats change, update them in **API Settings** without touching code.
-- TTS falls back to browser `speechSynthesis` if API audio fails.
-
-## Open Source
-
-You can publish this repo directly and extend it with:
-- Portfolio tracking
-- Alert rules and notifications
-- Watchlist analytics
-- Broker integrations
-
-## Sarvam API Docs
-- Chat Completions: https://docs.sarvam.ai/api-reference-docs/chat/completions
-- Text to Speech: https://docs.sarvam.ai/api-reference-docs/text-to-speech/convert
-
-(Translation endpoint names can vary by account/version. Keep endpoint configurable in settings.)
+AI output is constrained to educational analysis and blocks direct buy/sell execution instructions.  
+Always do independent research.

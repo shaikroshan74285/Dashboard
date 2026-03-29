@@ -1,0 +1,202 @@
+.app-shell {
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 0.55rem;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 0.75rem 1rem;
+  position: sticky;
+  top: 0.5rem;
+  z-index: 20;
+  backdrop-filter: blur(10px);
+}
+
+.brand {
+  min-width: 240px;
+  flex: 1;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ai);
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  background: linear-gradient(120deg, #1d4ed8, #0f766e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  margin: 0;
+  max-width: 620px;
+  color: var(--muted);
+  font-size: 0.79rem;
+}
+
+.top-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.44rem;
+}
+
+.status-strip {
+  margin-top: 0.56rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.44rem;
+}
+
+.local-run-banner {
+  margin-top: 0.56rem;
+  border: 1px solid #fdba74;
+  background: #fff7ed;
+  color: #9a3412;
+  border-radius: var(--radius-sm);
+  padding: 0.54rem 0.7rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.local-run-banner code {
+  background: #ffedd5;
+  border: 1px solid #fed7aa;
+  border-radius: 6px;
+  padding: 0.06rem 0.26rem;
+  font-family: Consolas, "Courier New", monospace;
+}
+
+.status-pill {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.45rem 0.68rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.status-pill .label {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.status-pill strong {
+  font-size: 0.88rem;
+}
+
+.tv-strip {
+  margin-top: 0.56rem;
+  overflow-x: auto;
+  min-height: 48px;
+  height: auto !important;
+}
+
+.tv-strip h2 {
+  display: none;
+}
+
+.dashboard-grid {
+  margin-top: 0.56rem;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-flow: dense;
+  grid-auto-rows: minmax(130px, auto);
+  gap: 0.52rem;
+}
+
+.dashboard-grid {
+  margin-top: 0.56rem;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-flow: dense;
+  grid-auto-rows: minmax(130px, auto);
+  gap: 0.52rem;
+}
+
+.span-3 {
+  grid-column: span 3;
+}
+.span-4 {
+  grid-column: span 4;
+}
+.span-6 {
+  grid-column: span 6;
+}
+.span-8 {
+  grid-column: span 8;
+}
+.span-12 {
+  grid-column: span 12;
+}
+
+.legal-box {
+  margin-top: 0.56rem;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius);
+  background: #fffbeb;
+  padding: 0.64rem 0.84rem;
+}
+
+.legal-box h2 {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #92400e;
+}
+
+.legal-box p {
+  margin-top: 0.2rem;
+  font-size: 0.76rem;
+  color: #a16207;
+}
+
+@media (max-width: 1280px) {
+  .span-4 {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 940px) {
+  .app-shell {
+    padding: 0.34rem;
+  }
+  .span-3,
+  .span-4,
+  .span-6,
+  .span-8,
+  .span-12 {
+    grid-column: span 12 !important;
+  }
+  .topbar {
+    padding: 0.58rem 0.68rem;
+  }
+  .topbar h1 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .top-actions {
+    width: 100%;
+    justify-content: center;
+  }
+}
