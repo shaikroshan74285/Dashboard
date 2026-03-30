@@ -32,6 +32,12 @@ export const INSIGHT_PANELS = [
   { id: "fii-dii-proxy", name: "FII-DII Proxy", category: "Pulse Meters", region: "India", description: "Flow bias proxy using banks, IT, and rupee." },
   { id: "beginner-brief", name: "Beginner Brief", category: "Articles and Briefs", region: "India", description: "Simple explanation of current conditions." },
   { id: "next-watch-signals", name: "Next Watch Signals", category: "Articles and Briefs", region: "India", description: "What to monitor in the next session." },
+  { id: "fear-greed-index", name: "Fear & Greed Index", category: "Pulse Meters", region: "Global", description: "Composite market fear and greed gauge." },
+  { id: "sector-heatmap", name: "Sector Heatmap", category: "Maps and Flows", region: "India", description: "Visual grid of sector sentiment with color coding." },
+  { id: "news-frequency", name: "News Frequency Tracker", category: "Maps and Flows", region: "Global", description: "Per-source news publishing frequency." },
+  { id: "currency-strength", name: "Currency Strength Meter", category: "Market Boards", region: "Global", description: "Relative strength of INR versus major currencies." },
+  { id: "top-movers", name: "Top Movers Board", category: "Market Boards", region: "Global", description: "Biggest gainers and losers from tracked quotes." },
+  { id: "session-clock", name: "Session Clock", category: "Maps and Flows", region: "Global", description: "Global market session status indicator." },
 ];
 
 const STOP_WORDS = new Set([
@@ -913,6 +919,191 @@ function renderNextWatchSignals(ctx) {
   return renderSignalChecklist(signals);
 }
 
+function renderFearGreedIndex(ctx) {
+  const sentimentBias = clamp((ctx.sentimentIndex + 100) / 2, 0, 100);
+  const riskInverse = 100 - ctx.riskScore;
+  const breadthScore = ctx.quoteStats.total
+    ? clamp(((ctx.quoteStats.positive - ctx.quoteStats.negative) / Math.max(1, ctx.quoteStats.total) + 1) * 50, 0, 100)
+    : 50;
+  const vix = Math.abs(quotePct(findQuote(ctx.quotes, "^VIX")) || 0);
+  const vixScore = clamp(100 - vix * 8, 0, 100);
+  const composite = Math.round(sentimentBias * 0.3 + riskInverse * 0.25 + breadthScore * 0.25 + vixScore * 0.2);
+
+  let zone = "Neutral";
+  let zoneClass = "fg-neutral";
+  if (composite >= 75) { zone = "Extreme Greed"; zoneClass = "fg-extreme-greed"; }
+  else if (composite >= 60) { zone = "Greed"; zoneClass = "fg-greed"; }
+  else if (composite <= 25) { zone = "Extreme Fear"; zoneClass = "fg-extreme-fear"; }
+  else if (composite <= 40) { zone = "Fear"; zoneClass = "fg-fear"; }
+
+  const needleDeg = Math.round((composite / 100) * 180 - 90);
+
+  return `<div class="fg-gauge-wrap">
+    <div class="fg-gauge">
+      <div class="fg-arc"></div>
+      <div class="fg-needle" style="transform:rotate(${needleDeg}deg)"></div>
+      <div class="fg-center">
+        <strong>${composite}</strong>
+        <span>${escapeHtml(zone)}</span>
+      </div>
+    </div>
+    <div class="fg-labels">
+      <span class="fg-extreme-fear">Extreme Fear</span>
+      <span class="fg-fear">Fear</span>
+      <span class="fg-neutral">Neutral</span>
+      <span class="fg-greed">Greed</span>
+      <span class="fg-extreme-greed">Extreme Greed</span>
+    </div>
+  </div>
+  ${renderStatsGrid([
+    { label: "Sentiment", value: `${sentimentBias.toFixed(0)}` },
+    { label: "Risk Inv.", value: `${riskInverse.toFixed(0)}` },
+    { label: "Breadth", value: `${breadthScore.toFixed(0)}` },
+    { label: "VIX Score", value: `${vixScore.toFixed(0)}` },
+  ])}`;
+}
+
+function renderSectorHeatmap(ctx) {
+  const sectors = classifyByRules(ctx.items.slice(0, 200), SECTOR_RULES).sort((a, b) => b.count - a.count);
+  if (!sectors.length || !sectors.some(s => s.count > 0)) return renderEmpty("Sector heatmap needs feed data. Add RSS panels and refresh.");
+
+  return `<div class="sector-heatmap-grid">${sectors.map(sector => {
+    let bgClass = "shm-neutral";
+    if (sector.tone >= 20) bgClass = "shm-positive";
+    else if (sector.tone <= -20) bgClass = "shm-negative";
+    const intensity = Math.min(1, sector.count / 20);
+    return `<div class="shm-cell ${escapeAttr(bgClass)}" style="opacity:${(0.5 + intensity * 0.5).toFixed(2)}">
+      <strong>${escapeHtml(sector.label)}</strong>
+      <span>${sector.count} mentions</span>
+      <small>${escapeHtml(toneLabel(sector.tone))}</small>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function renderNewsFrequency(ctx) {
+  const sources = sourceCounts(ctx.items);
+  if (!sources.length) return renderEmpty("Add RSS panels and refresh to see news frequency.");
+
+  const max = Math.max(1, ...sources.map(s => s.value));
+  return `<div class="nf-tracker">${sources.slice(0, 10).map(source => {
+    const pct = Math.round((source.value / max) * 100);
+    const barSegments = Array.from({ length: 10 }, (_, i) => {
+      const filled = (i + 1) * 10 <= pct;
+      return `<div class="nf-seg ${filled ? 'nf-filled' : ''}"></div>`;
+    }).join("");
+    return `<div class="nf-row">
+      <span class="nf-label">${escapeHtml(source.label)}</span>
+      <div class="nf-bar">${barSegments}</div>
+      <strong>${source.value}</strong>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function renderCurrencyStrength(ctx) {
+  const pairs = [
+    { label: "USD/INR", symbol: "USDINR=X", inverse: true },
+    { label: "EUR/USD", symbol: "EURUSD=X", inverse: false },
+    { label: "GBP/USD", symbol: "GBPUSD=X", inverse: false },
+    { label: "JPY (USD/JPY)", symbol: "JPY=X", inverse: true },
+  ];
+
+  const rows = pairs.map(pair => {
+    const pct = quotePct(findQuote(ctx.quotes, pair.symbol));
+    const display = pct !== null ? pct : 0;
+    const strength = pair.inverse ? -display : display;
+    return { ...pair, pct: display, strength };
+  });
+
+  if (rows.every(r => r.pct === 0)) {
+    return renderEmpty("Currency data will appear when market quotes are available.");
+  }
+
+  return `<div class="cs-meter-list">${rows.map(r => {
+    const barW = Math.min(Math.abs(r.strength) * 12, 100);
+    const dir = r.strength >= 0 ? "positive" : "negative";
+    return `<div class="cs-row">
+      <span class="cs-label">${escapeHtml(r.label)}</span>
+      <div class="cs-bar-track">
+        <div class="cs-bar-fill cs-${dir}" style="width:${barW}%"></div>
+      </div>
+      <strong class="cs-val cs-${dir}">${formatSigned(r.pct)}%</strong>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function renderTopMovers(ctx) {
+  const allQuotes = [];
+  ctx.quotes.forEach((row, symbol) => {
+    const pct = quotePct(row);
+    if (pct === null) return;
+    allQuotes.push({ symbol, name: displayName(row, symbol), pct, price: quotePrice(row) });
+  });
+
+  if (!allQuotes.length) return renderEmpty("Top movers board needs live quote data.");
+
+  allQuotes.sort((a, b) => b.pct - a.pct);
+  const gainers = allQuotes.filter(q => q.pct > 0).slice(0, 4);
+  const losers = allQuotes.filter(q => q.pct < 0).sort((a, b) => a.pct - b.pct).slice(0, 4);
+
+  function renderSide(title, items, cls) {
+    if (!items.length) return `<div class="tm-side"><h4 class="tm-title ${cls}">${title}</h4><p class="insight-empty">No ${title.toLowerCase()} right now</p></div>`;
+    return `<div class="tm-side">
+      <h4 class="tm-title ${cls}">${escapeHtml(title)}</h4>
+      ${items.map(q => `<div class="tm-item ${cls}">
+        <div class="tm-info"><strong>${escapeHtml(q.name)}</strong><span>${escapeHtml(q.symbol)}</span></div>
+        <div class="tm-val"><strong>${formatSigned(q.pct)}%</strong></div>
+      </div>`).join("")}
+    </div>`;
+  }
+
+  return `<div class="tm-board">
+    ${renderSide("Top Gainers", gainers, "tm-up")}
+    ${renderSide("Top Losers", losers, "tm-down")}
+  </div>`;
+}
+
+function renderSessionClock(ctx) {
+  const now = new Date();
+  const utcH = now.getUTCHours();
+  const utcM = now.getUTCMinutes();
+  const utcDecimal = utcH + utcM / 60;
+
+  const sessions = [
+    { label: "🇮🇳 India (NSE)", open: 3.75, close: 10, tz: "IST (UTC+5:30)", flag: "in" },
+    { label: "🇯🇵 Japan (TSE)", open: 0, close: 6, tz: "JST (UTC+9)", flag: "jp" },
+    { label: "🇬🇧 London (LSE)", open: 8, close: 16.5, tz: "GMT/BST", flag: "gb" },
+    { label: "🇺🇸 US (NYSE)", open: 13.5, close: 20, tz: "EST (UTC-5)", flag: "us" },
+    { label: "🇭🇰 Hong Kong", open: 1.5, close: 8, tz: "HKT (UTC+8)", flag: "hk" },
+    { label: "🇩🇪 Germany (FSE)", open: 7, close: 15.5, tz: "CET (UTC+1)", flag: "de" },
+  ];
+
+  return `<div class="sc-grid">${sessions.map(s => {
+    let isOpen = false;
+    if (s.open < s.close) {
+      isOpen = utcDecimal >= s.open && utcDecimal < s.close;
+    } else {
+      isOpen = utcDecimal >= s.open || utcDecimal < s.close;
+    }
+
+    const elapsed = isOpen
+      ? ((utcDecimal - s.open + 24) % 24)
+      : 0;
+    const duration = ((s.close - s.open) + 24) % 24;
+    const progress = isOpen ? Math.round((elapsed / duration) * 100) : 0;
+    const statusClass = isOpen ? "sc-open" : "sc-closed";
+    const statusText = isOpen ? "OPEN" : "CLOSED";
+
+    return `<div class="sc-card ${statusClass}">
+      <div class="sc-header">
+        <span class="sc-name">${escapeHtml(s.label)}</span>
+        <span class="sc-badge ${statusClass}">${statusText}</span>
+      </div>
+      <span class="sc-tz">${escapeHtml(s.tz)}</span>
+      ${isOpen ? `<div class="sc-progress-track"><div class="sc-progress-fill" style="width:${progress}%"></div></div>` : `<div class="sc-progress-track"><div class="sc-progress-fill sc-empty"></div></div>`}
+    </div>`;
+  }).join("")}</div>`;
+}
+
 const RENDERERS = {
   "market-mood-meter": renderMarketMoodMeter,
   "risk-thermometer": renderRiskThermometer,
@@ -944,6 +1135,12 @@ const RENDERERS = {
   "fii-dii-proxy": renderFiiDiiProxy,
   "beginner-brief": renderBeginnerBrief,
   "next-watch-signals": renderNextWatchSignals,
+  "fear-greed-index": renderFearGreedIndex,
+  "sector-heatmap": renderSectorHeatmap,
+  "news-frequency": renderNewsFrequency,
+  "currency-strength": renderCurrencyStrength,
+  "top-movers": renderTopMovers,
+  "session-clock": renderSessionClock,
 };
 
 export function getInsightPanel(id) {

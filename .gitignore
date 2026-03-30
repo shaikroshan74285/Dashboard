@@ -1,14 +1,11 @@
-﻿# Python
-__pycache__/
-*.pyc
-.venv/
-
-# Env files
-.env
-backend/.env
-
 # OS / Editor
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+
+# Node (only used for local dev server)
+node_modules/
+
+# Env files
+.env

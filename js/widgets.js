@@ -158,9 +158,9 @@ export const WIDGETS = [
     script: "embed-widget-symbol-overview.js",
     config: {
       symbols: [
-        ["US Dollar Index", "TVC:DXY|1D"],
-        ["India Bond Yield", "TVC:IN10Y|1D"],
         ["Gold", "TVC:GOLD|1D"],
+        ["India Bond Yield", "TVC:IN10Y|1D"],
+        ["Crude Oil", "TVC:USOIL|1D"],
         ["S&P 500 VIX", "CBOE:VIX|1D"],
       ],
       chartOnly: false,

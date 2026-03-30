@@ -105,14 +105,24 @@
 }
 
 .tv-strip {
-  margin-top: 0.56rem;
-  overflow-x: auto;
-  min-height: 48px;
+  margin-top: 0.35rem;
+  overflow: hidden;
+  min-height: 42px;
   height: auto !important;
+  padding: 0 !important;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  backdrop-filter: blur(16px);
 }
 
 .tv-strip h2 {
   display: none;
+}
+
+.tv-strip + .tv-strip {
+  margin-top: 0.2rem;
+  border-top: none;
 }
 
 .dashboard-grid {

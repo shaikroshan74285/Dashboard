@@ -12,6 +12,12 @@
   backdrop-filter: blur(16px);
 }
 
+.panel.tv-strip {
+  height: auto;
+  min-height: unset;
+  box-shadow: none;
+}
+
 .panel:hover {
   border-color: rgba(255,255,255,0.2);
   box-shadow: var(--shadow);
@@ -816,5 +822,423 @@
   }
   .insight-legend {
     width: 100%;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   Fear & Greed Gauge
+   ═══════════════════════════════════════════════ */
+.fg-gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fg-gauge {
+  position: relative;
+  width: 160px;
+  height: 88px;
+  overflow: hidden;
+}
+
+.fg-arc {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 180deg,
+    #dc2626 0deg,
+    #f59e0b 72deg,
+    #94a3b8 108deg,
+    #22c55e 144deg,
+    #16a34a 180deg
+  );
+  clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+}
+
+.fg-arc::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border-radius: 50%;
+  background: var(--panel-soft);
+}
+
+.fg-needle {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 3px;
+  height: 60px;
+  margin-left: -1.5px;
+  background: linear-gradient(to top, #f8fafc, rgba(248,250,252,0.2));
+  border-radius: 2px;
+  transform-origin: bottom center;
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 2;
+}
+
+.fg-center {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 3;
+}
+
+.fg-center strong {
+  display: block;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--text);
+}
+
+.fg-center span {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.fg-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 240px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.fg-labels .fg-extreme-fear { color: #dc2626; }
+.fg-labels .fg-fear { color: #f59e0b; }
+.fg-labels .fg-neutral { color: #94a3b8; }
+.fg-labels .fg-greed { color: #22c55e; }
+.fg-labels .fg-extreme-greed { color: #16a34a; }
+
+/* ═══════════════════════════════════════════════
+   Sector Heatmap
+   ═══════════════════════════════════════════════ */
+.sector-heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.3rem;
+}
+
+.shm-cell {
+  border-radius: var(--radius-xs);
+  padding: 0.55rem 0.5rem;
+  text-align: center;
+  display: grid;
+  gap: 0.1rem;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.shm-cell:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+.shm-cell strong {
+  font-size: 0.76rem;
+  color: var(--text);
+}
+
+.shm-cell span {
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.7);
+}
+
+.shm-cell small {
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.shm-positive {
+  background: linear-gradient(135deg, rgba(22,163,74,0.35), rgba(34,197,94,0.2));
+  border: 1px solid rgba(34,197,94,0.4);
+}
+.shm-positive small { color: #4ade80; }
+
+.shm-negative {
+  background: linear-gradient(135deg, rgba(220,38,38,0.35), rgba(239,68,68,0.2));
+  border: 1px solid rgba(239,68,68,0.4);
+}
+.shm-negative small { color: #f87171; }
+
+.shm-neutral {
+  background: linear-gradient(135deg, rgba(148,163,184,0.2), rgba(100,116,139,0.15));
+  border: 1px solid rgba(148,163,184,0.3);
+}
+.shm-neutral small { color: #94a3b8; }
+
+/* ═══════════════════════════════════════════════
+   News Frequency Tracker
+   ═══════════════════════════════════════════════ */
+.nf-tracker {
+  display: grid;
+  gap: 0.34rem;
+}
+
+.nf-row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.nf-label {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nf-bar {
+  display: flex;
+  gap: 2px;
+  height: 14px;
+}
+
+.nf-seg {
+  flex: 1;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.08);
+  transition: background var(--transition);
+}
+
+.nf-filled {
+  background: linear-gradient(180deg, #38bdf8, #2563eb);
+}
+
+.nf-row strong {
+  font-size: 0.7rem;
+  color: var(--text);
+  min-width: 26px;
+  text-align: right;
+}
+
+/* ═══════════════════════════════════════════════
+   Currency Strength Meter
+   ═══════════════════════════════════════════════ */
+.cs-meter-list {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.cs-row {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.cs-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.cs-bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+
+.cs-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+.cs-bar-fill.cs-positive {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.cs-bar-fill.cs-negative {
+  background: linear-gradient(90deg, #f59e0b, #dc2626);
+}
+
+.cs-val {
+  font-size: 0.7rem;
+  font-weight: 800;
+  min-width: 50px;
+  text-align: right;
+}
+
+.cs-val.cs-positive { color: #4ade80; }
+.cs-val.cs-negative { color: #f87171; }
+
+/* ═══════════════════════════════════════════════
+   Top Movers Board
+   ═══════════════════════════════════════════════ */
+.tm-board {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.tm-side {
+  display: grid;
+  gap: 0.26rem;
+  align-content: start;
+}
+
+.tm-title {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding-bottom: 0.24rem;
+  border-bottom: 1px solid var(--line-light);
+  margin: 0;
+}
+
+.tm-title.tm-up { color: #4ade80; }
+.tm-title.tm-down { color: #f87171; }
+
+.tm-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--line-light);
+  background: rgba(255,255,255,0.02);
+}
+
+.tm-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.tm-info strong {
+  display: block;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tm-info span {
+  font-size: 0.58rem;
+  color: var(--muted);
+}
+
+.tm-val strong {
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.tm-item.tm-up {
+  border-color: rgba(34,197,94,0.2);
+}
+.tm-item.tm-up .tm-val strong { color: #4ade80; }
+
+.tm-item.tm-down {
+  border-color: rgba(239,68,68,0.2);
+}
+.tm-item.tm-down .tm-val strong { color: #f87171; }
+
+/* ═══════════════════════════════════════════════
+   Session Clock
+   ═══════════════════════════════════════════════ */
+.sc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.3rem;
+}
+
+.sc-card {
+  border: 1px solid var(--line-light);
+  border-radius: var(--radius-xs);
+  padding: 0.45rem 0.5rem;
+  display: grid;
+  gap: 0.18rem;
+  background: rgba(255,255,255,0.02);
+  transition: border-color var(--transition);
+}
+
+.sc-card.sc-open {
+  border-color: rgba(34,197,94,0.4);
+  background: rgba(22,163,74,0.08);
+}
+
+.sc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3rem;
+}
+
+.sc-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.sc-badge {
+  font-size: 0.52rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.08rem 0.3rem;
+  border-radius: 999px;
+}
+
+.sc-badge.sc-open {
+  background: rgba(34,197,94,0.2);
+  color: #4ade80;
+}
+
+.sc-badge.sc-closed {
+  background: rgba(148,163,184,0.15);
+  color: #94a3b8;
+}
+
+.sc-tz {
+  font-size: 0.58rem;
+  color: var(--muted);
+}
+
+.sc-progress-track {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+  margin-top: 0.15rem;
+}
+
+.sc-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+  transition: width 0.6s ease;
+}
+
+.sc-progress-fill.sc-empty {
+  width: 0%;
+}
+
+@media (max-width: 480px) {
+  .sc-grid {
+    grid-template-columns: 1fr;
+  }
+  .tm-board {
+    grid-template-columns: 1fr;
+  }
+  .sector-heatmap-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

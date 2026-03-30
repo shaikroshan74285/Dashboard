@@ -21,6 +21,7 @@ export const DEFAULT_SETTINGS = {
 };
 
 export const DEFAULT_PANELS = [
+  { type: "widget", id: "tv-heatmap" },
   { type: "widget", id: "tv-india-quotes" },
   { type: "widget", id: "tv-global-quotes" },
   { type: "widget", id: "tv-crypto" },
@@ -29,10 +30,9 @@ export const DEFAULT_PANELS = [
   { type: "widget", id: "tv-hotlists" },
   { type: "widget", id: "tv-gdp" },
   { type: "widget", id: "tv-calendar" },
-  { type: "widget", id: "tv-heatmap" },
-  { type: "stream", id: "bloomberg" },
-  { type: "stream", id: "al-jazeera" },
   { type: "stream", id: "dw-news" },
+  { type: "stream", id: "sky-news" },
+  { type: "stream", id: "cna-news" },
   { type: "rss", id: "et-markets" },
   { type: "rss", id: "livemint-markets" },
   { type: "rss", id: "reuters-markets" },
@@ -40,6 +40,9 @@ export const DEFAULT_PANELS = [
   { type: "rss", id: "openai-news" },
   { type: "insight", id: "market-mood-meter" },
   { type: "insight", id: "risk-thermometer" },
+  { type: "insight", id: "fear-greed-index" },
+  { type: "insight", id: "sector-heatmap" },
+  { type: "insight", id: "session-clock" },
   { type: "insight", id: "beginner-brief" }
 ];
 
