@@ -23,7 +23,7 @@ export const WIDGETS = [
       ],
       showSymbolLogo: true,
       isTransparent: true,
-      colorTheme: "dark",
+      colorTheme: "light",
       locale: "en"
     }
   },
@@ -50,7 +50,7 @@ export const WIDGETS = [
       ],
       showSymbolLogo: true,
       isTransparent: true,
-      colorTheme: "dark",
+      colorTheme: "light",
       locale: "en"
     }
   },

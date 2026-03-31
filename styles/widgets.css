@@ -1,6 +1,6 @@
 .tv-widget-host {
   width: 100%;
-  min-height: 48px;
+  min-height: 46px;
   height: 100%;
 }
 
@@ -15,26 +15,27 @@
   height: 100% !important;
 }
 
+/* ═══ Modal ═══ */
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.45);
+  background: rgba(15, 23, 42, 0.3);
   display: grid;
   place-items: center;
   padding: 1rem;
   z-index: 60;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
 }
 
 .modal-card {
   width: min(950px, 96vw);
   max-height: 92vh;
   overflow: auto;
-  background: var(--panel);
+  background: #ffffff;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 18px;
   box-shadow: var(--shadow-lg);
-  padding: 1rem 1.15rem;
+  padding: 1.2rem 1.3rem;
 }
 
 .modal-head {
@@ -49,7 +50,8 @@
 
 .modal-head h3 {
   margin: 0;
-  font-size: 1.04rem;
+  font-size: 1.08rem;
+  color: var(--text);
 }
 
 .modal-grid {
@@ -59,7 +61,7 @@
 }
 
 .modal-card label {
-  color: #cbd5e1;
+  color: var(--text-secondary);
   font-size: 0.76rem;
   font-weight: 700;
 }
@@ -67,26 +69,27 @@
 .modal-card input,
 .modal-card select {
   margin-top: 0.2rem;
-  background: rgba(15, 23, 42, 0.8);
-  border-color: rgba(255, 255, 255, 0.12);
-  color: #f1f5f9;
+  background: #f8fafc;
+  border-color: var(--line);
+  color: var(--text);
 }
 
 .modal-card input:focus,
 .modal-card select:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
 .modal-card .btn-primary {
-  background: var(--primary);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #fff;
 }
 
 .modal-card .modal-head h3 {
-  color: #f8fafc;
+  color: var(--text);
 }
 
+/* ═══ Add Panel Modal ═══ */
 .panel-modal-top {
   display: flex;
   align-items: center;
@@ -104,7 +107,8 @@
   padding: 0.45rem 0.62rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.02);
+  background: #f8fafc;
+  color: var(--text);
   font-size: 0.81rem;
 }
 
@@ -135,7 +139,7 @@
   color: var(--text-secondary);
   position: sticky;
   top: 0;
-  background: var(--panel);
+  background: #fff;
   z-index: 2;
 }
 
@@ -148,17 +152,18 @@
 .feed-source-item {
   border: 1px solid var(--line-light);
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.03);
+  background: #fafbff;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.4rem;
   padding: 0.46rem 0.58rem;
+  transition: all var(--transition);
 }
 
 .feed-source-item:hover {
-  border-color: #c6d5ea;
-  background: rgba(255, 255, 255, 0.02);
+  border-color: #cbd5e1;
+  background: #f1f5f9;
 }
 
 .feed-source-info {
@@ -172,6 +177,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--text);
 }
 
 .feed-source-item .meta {

@@ -1,7 +1,7 @@
 .app-shell {
   max-width: 1920px;
   margin: 0 auto;
-  padding: 0.55rem;
+  padding: 0.6rem;
 }
 
 .topbar {
@@ -10,15 +10,15 @@
   align-items: center;
   gap: 0.7rem;
   flex-wrap: wrap;
-  background: rgba(255, 255, 255, 0.92);
+  background: #ffffff;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow);
+  padding: 0.75rem 1.2rem;
   position: sticky;
   top: 0.5rem;
   z-index: 20;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
 }
 
 .brand {
@@ -38,10 +38,17 @@
 .topbar h1 {
   margin: 0;
   font-size: 1.35rem;
-  background: linear-gradient(120deg, #1d4ed8, #0f766e);
+  background: linear-gradient(120deg, #1d4ed8, #7c3aed, #0f766e);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: gradient-shift 6s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 100% center; }
 }
 
 .subtitle {
@@ -85,10 +92,10 @@
 }
 
 .status-pill {
-  background: var(--panel);
+  background: #fff;
   border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.45rem 0.68rem;
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.72rem;
   box-shadow: var(--shadow-sm);
 }
 
@@ -102,18 +109,21 @@
 
 .status-pill strong {
   font-size: 0.88rem;
+  color: var(--text);
 }
 
+/* ═══ Ticker Tape — ZERO whitespace ═══ */
 .tv-strip {
-  margin-top: 0.35rem;
+  margin-top: 0.4rem;
   overflow: hidden;
-  min-height: 42px;
-  height: auto !important;
+  height: 46px !important;
+  min-height: 46px;
+  max-height: 46px;
   padding: 0 !important;
   border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--panel);
-  backdrop-filter: blur(16px);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
 }
 
 .tv-strip h2 {
@@ -121,8 +131,21 @@
 }
 
 .tv-strip + .tv-strip {
-  margin-top: 0.2rem;
-  border-top: none;
+  margin-top: 0.25rem;
+}
+
+.tv-strip .tv-widget-host {
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
+  overflow: hidden;
+}
+
+.tv-strip .tv-widget-host .tradingview-widget-container,
+.tv-strip .tv-widget-host .tradingview-widget-container__widget,
+.tv-strip .tv-widget-host iframe {
+  height: 46px !important;
+  max-height: 46px !important;
 }
 
 .dashboard-grid {
@@ -131,16 +154,7 @@
   grid-template-columns: repeat(12, 1fr);
   grid-auto-flow: dense;
   grid-auto-rows: minmax(130px, auto);
-  gap: 0.52rem;
-}
-
-.dashboard-grid {
-  margin-top: 0.56rem;
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-auto-flow: dense;
-  grid-auto-rows: minmax(130px, auto);
-  gap: 0.52rem;
+  gap: 0.56rem;
 }
 
 .span-3 {
@@ -161,22 +175,22 @@
 
 .legal-box {
   margin-top: 0.56rem;
-  border: 1px solid #fde68a;
+  border: 1px solid #e9d5ff;
   border-radius: var(--radius);
-  background: #fffbeb;
+  background: linear-gradient(135deg, #faf5ff, #f5f3ff);
   padding: 0.64rem 0.84rem;
 }
 
 .legal-box h2 {
   margin: 0;
   font-size: 0.88rem;
-  color: #92400e;
+  color: #6b21a8;
 }
 
 .legal-box p {
   margin-top: 0.2rem;
   font-size: 0.76rem;
-  color: #a16207;
+  color: #7e22ce;
 }
 
 @media (max-width: 1280px) {
